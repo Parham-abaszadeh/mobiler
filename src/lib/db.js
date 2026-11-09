@@ -1,0 +1,11 @@
+import mongoose from 'mongoose';
+const g = globalThis;
+g._mobiler ||= { conn: null, promise: null };
+
+export async function connectDB() {
+  if (g._mobiler.conn) return g._mobiler.conn;
+  if (!process.env.MONGODB_URI) throw new Error('MONGODB_URI تنظیم نشده است');
+  g._mobiler.promise ||= mongoose.connect(process.env.MONGODB_URI, { dbName: 'mobiler' });
+  g._mobiler.conn = await g._mobiler.promise;
+  return g._mobiler.conn;
+}
