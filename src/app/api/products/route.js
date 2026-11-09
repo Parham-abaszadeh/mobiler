@@ -14,6 +14,7 @@ export async function GET(req) {
     const items = await Product.find(filter).sort(sort).limit(limit).lean();
     return Response.json(items.map((p) => ({ ...p, _id: String(p._id) })));
   } catch (e) {
-    return Response.json({ error: e.message }, { status: 500 });
+    console.error('products api error:', e);
+    return Response.json({ error: 'خطای سرور' }, { status: 500 });
   }
 }
