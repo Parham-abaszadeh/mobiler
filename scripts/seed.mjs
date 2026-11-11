@@ -20,6 +20,8 @@ for (const [cat, c] of Object.entries(CATS)) {
     docs.push({
       name: `${c.label} ${brand} مدل ${i + 1}`,
       slug: `${cat}-${i + 1}`,
+      sku: `${cat}-${i + 1}`.toUpperCase(),
+      minStock: 5,
       brand,
       category: cat,
       price,

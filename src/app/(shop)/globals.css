@@ -1,0 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+body { background: #f3f5fb; color: #151a3a; }
+:focus-visible { outline: 2px solid #1e3a8a; outline-offset: 2px; }
+.glass { background: rgba(255,255,255,.55); backdrop-filter: blur(14px) saturate(160%); -webkit-backdrop-filter: blur(14px) saturate(160%); border: 1px solid rgba(255,255,255,.7); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }

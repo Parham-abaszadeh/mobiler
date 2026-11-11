@@ -1,11 +1,14 @@
 import mongoose from 'mongoose';
-// مرحله ۳: ثبت سفارش و کم‌کردن موجودی از این مدل استفاده می‌کند
+export const ORDER_STATUSES = ['pending', 'confirmed', 'completed', 'cancelled'];
+
 const OrderSchema = new mongoose.Schema(
   {
+    code: { type: String, unique: true, sparse: true },
     customer: { name: String, phone: String, address: String },
     items: [{ product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' }, name: String, price: Number, qty: Number }],
     total: Number,
-    status: { type: String, default: 'pending' }
+    method: { type: String, enum: ['cash', 'installment'], default: 'cash' },
+    status: { type: String, enum: ORDER_STATUSES, default: 'pending', index: true }
   },
   { timestamps: true }
 );

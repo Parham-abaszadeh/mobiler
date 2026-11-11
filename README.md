@@ -1,14 +1,39 @@
-# موبایلر (فروشگاه نمونه‌ی اعتباریار)
-Next.js 14 (App Router) + Tailwind (RTL) + MongoDB Atlas + SWR.
+# موبایلر — فروشگاه + پنل مدیریت (یک پروژه، یک دیتابیس)
 
-## اجرا
+Next.js 15 (App Router) + MongoDB Atlas (Mongoose) + Tailwind (فروشگاه) — قابل دیپلوی مستقیم روی Vercel.
+
+| آدرس | چیست |
+|---|---|
+| `/` | فروشگاه (ویترین، پیشنهاد شگفت‌انگیز، پرفروش‌ها) |
+| `/admin` | پنل مدیریت (نیاز به ورود) |
+| `/api/products` | API عمومی محصولات برای فروشگاه |
+| `/api/orders` | ثبت سفارش از فروشگاه (قیمت از دیتابیس، کم‌شدن اتمیک موجودی) |
+| `/api/admin/*` | APIهای پنل (همه پشت ورود) |
+
+## چه چیزی واقعاً به دیتابیس وصل است
+- **انبار** (`/admin/inventory`): لیست، افزودن، ویرایش قیمت/موجودی، حذف — همان کالکشن `products` که فروشگاه می‌خواند. تغییر در پنل بلافاصله در فروشگاه دیده می‌شود (فروشگاه موجودی را هر ۱۰ ثانیه تازه می‌کند).
+- **فروش** (`/admin/sales`): سفارش‌های کالکشن `orders`؛ تغییر وضعیت. لغو سفارش موجودی را به انبار برمی‌گرداند.
+- **داشبورد** (`/admin`): فروش امروز، سفارش‌های در انتظار، سلامت انبار و آخرین سفارش‌ها زنده‌اند.
+
+## چه چیزی هنوز نمونه (Demo) است
+مشتریان اقساطی، اقساط، ریسک و اعتبارسنجی، مالی/اکسل، کاربران، فعالیت‌ها، اتصال‌ها، اعلان‌ها، اشتراک، تنظیمات، و نمودار و کارت‌های «مطالبات اقساط / هشدار ریسک» داشبورد — هنوز داده‌ی ثابت دارند و بک‌اند ندارند.
+
+## اجرای محلی
 1. `npm install`
-2. `cp .env.example .env.local` و `MONGODB_URI` را با آدرس Atlas پر کنید (در Network Access باید IP شما مجاز باشد)
-3. `npm run seed` ← ثبت ۱۰۰ محصول (نیاز به Node 20.6 یا بالاتر)
-4. `npm run dev` ← http://localhost:3000
+2. `cp .env.example .env.local` و مقدارها را پر کنید (`MONGODB_URI`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `SESSION_SECRET`)
+3. `npm run seed` ← ۱۰۰ محصول (فقط یک بار)
+4. `npm run seed:orders` ← (اختیاری) ۱۲ سفارش نمونه برای دیدن صفحه فروش
+5. `npm run dev` ← فروشگاه `http://localhost:3000` و پنل `http://localhost:3000/admin`
 
 ## ساختار
-- `src/app` صفحات و API (`/api/products?category=&q=&sort=&limit=`)
-- `src/components` هدر، پیشنهادها، بنرها، ویترین دسته‌بندی، کارت محصول
-- `src/models` مدل‌های Mongoose (Product, Order)
-- `scripts/seed.mjs` تولید ۱۰۰ محصول (۵ دسته × ۲۰)
+```
+src/app/(shop)/        فروشگاه (Root Layout و CSS مخصوص خودش)
+src/app/(admin)/admin/ پنل مدیریت (Root Layout و CSS مخصوص خودش)
+src/app/api/           APIها
+src/admin/             کامپوننت‌ها و ترجمه‌ی پنل
+src/components/        کامپوننت‌های فروشگاه
+src/models/            Product, Order (مشترک)
+src/lib/               db، auth، catalog
+src/middleware.js      قفل‌کردن /admin و /api/admin
+```
+فروشگاه و پنل دو Root Layout جدا دارند تا CSS سراسری پنل روی فروشگاه (و برعکس) اثر نگذارد.
